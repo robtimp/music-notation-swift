@@ -10,21 +10,21 @@ import XCTest
 @testable import MusicNotationKit
 
 class TupletTests: XCTestCase {
-
-	let tone1 = Tone(noteLetter: .a, octave: .octave1)
-	let tone2 = Tone(noteLetter: .b, accidental: .sharp, octave: .octave1)
-	let tone3 = Tone(noteLetter: .d, accidental: .natural, octave: .octave1)
-	let quarterRest = Note(noteDuration: .quarter)
-	let eighthRest = Note(noteDuration: .eighth)
+    
+    let tone1 = Tone(noteLetter: .a, octave: .octave1)
+    let tone2 = Tone(noteLetter: .b, accidental: .sharp, octave: .octave1)
+    let tone3 = Tone(noteLetter: .d, accidental: .natural, octave: .octave1)
+    let quarterRest = Note(noteDuration: .quarter)
+    let eighthRest = Note(noteDuration: .eighth)
     let dottedQuarterNote = Note(noteDuration: try! NoteDuration(value: .quarter, dotCount: 1),
                                  tone: Tone(noteLetter: .c, octave: .octave3))
-	var quarterNote1: Note!
-	var quarterNote2: Note!
-	var quarterNote3: Note!
-	var eighthNote: Note!
-	var quarterChord: Note!
-	var eighthChord: Note!
-	
+    var quarterNote1: Note!
+    var quarterNote2: Note!
+    var quarterNote3: Note!
+    var eighthNote: Note!
+    var quarterChord: Note!
+    var eighthChord: Note!
+    
     override func setUp() {
         super.setUp()
         quarterNote1 = Note(noteDuration: .quarter, tone: tone1)
@@ -34,21 +34,21 @@ class TupletTests: XCTestCase {
         quarterChord = Note(noteDuration: .quarter, tones: [tone1, tone2, tone3])
         eighthChord = Note(noteDuration: .eighth, tones: [tone1, tone2, tone3])
     }
-
+    
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
+    
     // MARK: - init(notes:)
     // MARK: Failures
-
+    
     func testInitFailForCountLessThan2() {
         assertThrowsError(TupletError.countMustBeLargerThan1) {
             let _ = try Tuplet(1, .quarter, notes: [quarterNote1])
         }
     }
-
+    
     func testInitFailForOddCountNoBaseCount() {
         // count specified is something not in 2-9 range and no base count specified
         assertThrowsError(TupletError.countHasNoStandardRatio) {
@@ -61,19 +61,19 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForEmptyNotes() {
         // standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(3, .eighth, notes: [])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(11, .eighth, inSpaceOf: 9, notes: [])
         }
     }
-
+    
     func testInitFailForNotesSameDurationNotEnough() {
         // standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
@@ -85,13 +85,13 @@ class TupletTests: XCTestCase {
             let _ = try Tuplet(11, .quarter, inSpaceOf: 9, notes: [quarterNote1, quarterNote2, quarterNote3])
         }
     }
-
+    
     func testInitFailForNotesSameDurationTooMany() {
         // standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
             let _ = try Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3, quarterNote1])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
             let _ = try Tuplet(
@@ -103,13 +103,13 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForNotesShorterNotEnough() {
         // standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(4, .quarter, notes: [eighthNote, eighthNote, quarterNote1])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(
@@ -123,7 +123,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForShorterTooMany() {
         // standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
@@ -134,7 +134,7 @@ class TupletTests: XCTestCase {
                     eighthNote, eighthNote, eighthNote, eighthNote, quarterNote1, quarterNote2, quarterNote3
                 ])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
             let _ = try Tuplet(
@@ -147,19 +147,19 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForLongerNotEnough() {
         // standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(4, .eighth, notes: [quarterNote1, eighthNote])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(11, .eighth, inSpaceOf: 9, notes: [eighthNote, eighthNote, quarterNote1])
         }
     }
-
+    
     func testInitFailForLongerTooMany() {
         // standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
@@ -170,7 +170,7 @@ class TupletTests: XCTestCase {
                     eighthNote, quarterNote1, eighthNote, quarterNote2
                 ])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesOverfillTuplet) {
             let _ = try Tuplet(
@@ -182,19 +182,19 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForSameDurationWithRestsNotEnough() {
         // standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(3, .quarter, notes: [quarterNote1, quarterRest])
         }
-
+        
         // non-standard ratio
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let _ = try Tuplet(11, .quarter, inSpaceOf: 9, notes: [quarterNote1, quarterRest, quarterNote3])
         }
     }
-
+    
     func testInitFailForCompoundTupletTooLarge() {
         assertThrowsError(TupletError.notesOverfillTuplet) {
             // This is worth 4 quarter notes
@@ -215,7 +215,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitFailForCompoundTupletTooSmall() {
         assertThrowsError(TupletError.notesDoNotFillTuplet) {
             let triplet = try? Tuplet(
@@ -234,19 +234,19 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     // MARK: Successes
-
-	func testInitSuccessForAllStandardCombinations() {
+    
+    func testInitSuccessForAllStandardCombinations() {
         assertNoErrorThrown {
-			// Test 2 - 9
-			let _ = try Tuplet(
+            // Test 2 - 9
+            let _ = try Tuplet(
                 2,
                 .quarter,
                 notes: [
                     quarterNote1, quarterNote2
                 ])
-			let _ = try Tuplet(
+            let _ = try Tuplet(
                 3,
                 .quarter,
                 notes: [
@@ -290,16 +290,16 @@ class TupletTests: XCTestCase {
                     quarterNote1, quarterNote2, quarterNote3, quarterNote1, quarterNote2, quarterNote3, quarterNote1,
                     quarterNote2, quarterNote3
                 ])
-			// Test with a chord
-			let _ = try Tuplet(
+            // Test with a chord
+            let _ = try Tuplet(
                 2,
                 .quarter,
                 notes: [
                     quarterNote1, quarterChord
                 ])
-		}
-	}
-
+        }
+    }
+    
     func testInitSuccessForStandardMixedDurations() {
         assertNoErrorThrown {
             let _ = try Tuplet(
@@ -310,7 +310,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForStandardDottedBase() {
         assertNoErrorThrown {
             let baseDuration = try? NoteDuration(value: .quarter, dotCount: 1)
@@ -323,7 +323,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForStandardDottedBaseMixedDuration() {
         assertNoErrorThrown {
             let baseDuration = try? NoteDuration(value: .quarter, dotCount: 1)
@@ -336,7 +336,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForStandardCompound() {
         assertNoErrorThrown {
             let triplet = try? Tuplet(3, .eighth, notes: [eighthNote, eighthNote, eighthNote])
@@ -350,13 +350,13 @@ class TupletTests: XCTestCase {
             )
         }
     }
-
+    
     func testInitSuccessForStandardWithRests() {
         assertNoErrorThrown {
             let _ = try Tuplet(3, .quarter, notes: [quarterNote1, quarterRest, quarterNote3])
         }
     }
-
+    
     func testInitSuccessForNonStandardSameDuration() {
         assertNoErrorThrown {
             let _ = try Tuplet(
@@ -369,7 +369,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForNonStandardDottedBase() {
         assertNoErrorThrown {
             let _ = try Tuplet(
@@ -378,10 +378,10 @@ class TupletTests: XCTestCase {
                 inSpaceOf: 2,
                 notes: [
                     dottedQuarterNote, dottedQuarterNote, dottedQuarterNote, dottedQuarterNote,
-                ])
+                    ])
         }
     }
-
+    
     func testInitSuccessForNonStandardCompound() {
         assertNoErrorThrown {
             // Space of 4 eighth notes
@@ -397,7 +397,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForNonStandardNestedCompound() {
         assertNoErrorThrown {
             // Space of 4 eighth notes
@@ -415,7 +415,7 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     func testInitSuccessForNonStandardWithRests() {
         assertNoErrorThrown {
             let _ = try Tuplet(
@@ -428,24 +428,24 @@ class TupletTests: XCTestCase {
                 ])
         }
     }
-
+    
     // MARK: - replaceNote(at:with:Note)
     // MARK: Failures
-
+    
     func testReplaceNoteWithNoteTooLong() {
         assertThrowsError(TupletError.replacingCollectionNotSameDuration) {
             var tuplet = try Tuplet(3, .eighth, notes: [eighthNote, eighthNote, eighthNote])
             try tuplet.replaceNote(at: 1, with: quarterNote1)
         }
     }
-
+    
     func testReplaceNoteWithNoteTooShort() {
         assertThrowsError(TupletError.replacingCollectionNotSameDuration) {
             var tuplet = try Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
             try tuplet.replaceNote(at: 0, with: eighthNote)
         }
     }
-
+    
     func testReplaceNoteInTupletWithNoteTooShort() {
         assertThrowsError(TupletError.replacingCollectionNotSameDuration) {
             let triplet = try? Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
@@ -456,7 +456,7 @@ class TupletTests: XCTestCase {
             try tuplet.replaceNote(at: 1, with: eighthNote)
         }
     }
-
+    
     func testReplaceNoteInTupletWithNoteTooLong() {
         assertThrowsError(TupletError.replacingCollectionNotSameDuration) {
             let triplet = try? Tuplet(3, .eighth, notes: [eighthNote, eighthNote, eighthNote])
@@ -467,9 +467,9 @@ class TupletTests: XCTestCase {
             try tuplet.replaceNote(at: 1, with: quarterNote1)
         }
     }
-
+    
     // MARK: Successes
-
+    
     func testReplaceNoteWithRestOfSameDuration() {
         assertNoErrorThrown {
             var tuplet = try Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
@@ -479,7 +479,7 @@ class TupletTests: XCTestCase {
             XCTAssertEqual(try tuplet.note(at: 2), quarterNote3)
         }
     }
-
+    
     func testReplaceNoteInTupletWithRestOfSameDuration() {
         assertNoErrorThrown {
             let triplet = try? Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
@@ -496,7 +496,7 @@ class TupletTests: XCTestCase {
             XCTAssertEqual(try tuplet.note(at: 5), quarterNote3)
         }
     }
-
+    
     func testReplaceNoteWithNoteOfSameDuration() {
         assertNoErrorThrown {
             var tuplet = try Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
@@ -506,7 +506,7 @@ class TupletTests: XCTestCase {
             XCTAssertEqual(try tuplet.note(at: 2), quarterNote3)
         }
     }
-
+    
     func testReplaceNoteInTupletWithNoteOfSameDuration() {
         assertNoErrorThrown {
             let triplet = try? Tuplet(3, .quarter, notes: [quarterNote1, quarterNote2, quarterNote3])
@@ -523,46 +523,46 @@ class TupletTests: XCTestCase {
             XCTAssertEqual(try tuplet.note(at: 5), quarterNote3)
         }
     }
-
+    
     // MARK: - replaceNote(at:with:[Note])
     // MARK: Failures
-
+    
     // MARK: Successes
-
-
+    
+    
     // MARK: - replaceNote(at:with:Tuplet)
     // MARK: Failures
-
+    
     func testReplaceNoteWithTupletTooLong() {
-
+        
     }
-
+    
     func testReplaceNoteWithTupletTooShort() {
-
+        
     }
-
+    
     func testReplaceNoteInTupletWithTupletTooLong() {
-
+        
     }
-
+    
     func testReplaceNoteInTupletWithTupletTooShort() {
-
+        
     }
-
+    
     // MARK: Successes
-
+    
     // MARK: - replaceNotes(in:with:Note)
     // MARK: Failures
-
+    
     // MARK: Successes
-
+    
     // MARK: - replaceNotes(in:with:[Note])
     // MARK: Failures
-
+    
     // MARK: Successes
-
+    
     // MARK: - replaceNotes(in:with:Tuplet)
     // MARK: Failures
-
+    
     // MARK: Successes
 }
