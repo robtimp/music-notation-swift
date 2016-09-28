@@ -9,8 +9,7 @@
 import XCTest
 @testable import MusicNotationKit
 
-class TupletTests: XCTestCase {
-    
+class TupletTests: XCTestCase {  
     let tone1 = Tone(noteLetter: .a, octave: .octave1)
     let tone2 = Tone(noteLetter: .b, accidental: .sharp, octave: .octave1)
     let tone3 = Tone(noteLetter: .d, accidental: .natural, octave: .octave1)
